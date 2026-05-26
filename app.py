@@ -11,9 +11,7 @@ st.write("Target User Frequency Analyzer")
 
 if st.button("Analyze"):
 
-    if text == "":
-        st.warning("Please enter some text")
-
+  
     else:
 
         cleaned_text = re.sub(r"\s+", " ", text)
