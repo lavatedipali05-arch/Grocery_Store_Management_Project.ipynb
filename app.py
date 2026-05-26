@@ -8,10 +8,6 @@ st.title("Grocery Store Management Analysis")
 
 st.write("Target User Frequency Analyzer")
 
-text = st.text_area(
-    "Enter Grocery Store Document",
-    height=250
-)
 
 if st.button("Analyze"):
 
