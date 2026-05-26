@@ -12,10 +12,7 @@ st.write("Target User Frequency Analyzer")
 if st.button("Analyze"):
 
   
-    else:
-       cleaned_text = re.sub(r"\s+", " ", text)
-
-        users = [
+           users = [
             "Store Owner",
             "Store Manager",
             "Cashier",
