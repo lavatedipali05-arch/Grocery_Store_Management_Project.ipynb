@@ -6,11 +6,10 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import pandas as pd
 
-df = pd.read_csv("dataset.csv")
-
 st.write(df.head())
 
 st.title("Grocery Store Management Analysis")
+df = pd.read_csv("dataset.csv"
 
 st.write("Target User Frequency Analyzer")
 
