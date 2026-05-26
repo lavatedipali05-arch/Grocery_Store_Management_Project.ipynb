@@ -13,8 +13,7 @@ if st.button("Analyze"):
 
   
     else:
-
-        cleaned_text = re.sub(r"\s+", " ", text)
+       cleaned_text = re.sub(r"\s+", " ", text)
 
         users = [
             "Store Owner",
