@@ -1,83 +1,30 @@
 import streamlit as st
 import pandas as pd
-import re
-from collections import Counter
-import matplotlib.pyplot as plt
 
-st.title("Grocery Store Management Analysis")
+st.title("Grocery Store App")
 
-st.write("Target User Frequency Analyzer")
+# load files
+df1 = pd.read_csv("dataset.csv")
+df2 = pd.read_csv("target_user_analysis.csv")
 
-text = st.text_area(
-    "Enter Grocery Store Document",
-    height=250
-)
+# clean column names (important)
+df1.columns = df1.columns.str.strip()
+df2.columns = df2.columns.str.strip()
 
-if st.button("Analyze"):
+# -------------------
+# Sales Data
+# -------------------
+st.header("Sales Data")
+st.write(df1.head())
 
-    if text == "":
-        st.warning("Please enter some text")
+city_sales = df1.groupby("City")["Total"].sum()
+st.bar_chart(city_sales)
 
-    else:
+# -------------------
+# User Data
+# -------------------
+st.header("User Data")
+st.write(df2.head())
 
-        cleaned_text = re.sub(r"\s+", " ", text)
-
-        users = [
-            "Store Owner",
-            "Store Manager",
-            "Cashier",
-            "Inventory Staff",
-            "Customers",
-            "Suppliers",
-            "Admin"
-        ]
-
-        found = []
-
-        for user in users:
-
-            data = re.findall(
-                user,
-                cleaned_text,
-                re.IGNORECASE
-            )
-
-            found.extend(data)
-
-        counts = Counter(found)
-
-        df = pd.DataFrame(
-            counts.items(),
-            columns=["User Type", "Count"]
-        )
-
-        st.subheader("Analysis Result")
-
-        st.dataframe(df)
-
-        csv = df.to_csv(index=False)
-
-        st.download_button(
-            "Download CSV",
-            csv,
-            "report.csv",
-            "text/csv"
-        )
-
-        fig, ax = plt.subplots()
-
-        ax.bar(
-            df["User Type"],
-            df["Count"]
-        )
-
-        plt.xticks(rotation=15)
-
-        plt.xlabel("User Type")
-        plt.ylabel("Count")
-
-        plt.title("Target User Analysis")
-
-        st.pyplot(fig)
-
-        st.success("Analysis Completed")
+gender = df2["Gender"].value_counts()
+st.bar_chart(gender)
