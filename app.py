@@ -1,88 +1,40 @@
 import streamlit as st
 import pandas as pd
-import re
-from collections import Counter
-import matplotlib.pyplot as plt
-import streamlit as st
-import pandas as pd
 
 st.title("Grocery Store Management Analysis")
+
 df = pd.read_csv("dataset.csv")
-st.write(df.head())
 
-st.write("Target User Frequency Analyzer")
 
-text = st.text_area(
-    "Enter Grocery Store Document",
-    height=250
-)
+st.subheader("Dataset Preview")
+st.dataframe(df)
 
-if st.button("Analyze"):
+st.subheader("Filter Data")
 
-    if text == "":
-        st.warning("Please enter some text")
+city = st.selectbox("Select City", df["City"].unique())
+gender = st.selectbox("Select Gender", df["Gender"].unique())
 
-    else:
+filtered_df = df[(df["City"] == city) & (df["Gender"] == gender)]
 
-        cleaned_text = re.sub(r"\s+", " ", text)
+st.write("Filtered Data")
+st.dataframe(filtered_df)
 
-        users = [
-            "Store Owner",
-            "Store Manager",
-            "Cashier",
-            "Inventory Staff",
-            "Customers",
-            "Suppliers",
-            "Admin"
-        ]
+st.subheader("Sales Analysis")
 
-        found = []
 
-        for user in users:
+city_sales = df.groupby("City")["Total"].sum()
+st.write("Total Sales by City")
+st.bar_chart(city_sales)
 
-            data = re.findall(
-                user,
-                cleaned_text,
-                re.IGNORECASE
-            )
+product_sales = df.groupby("Product line")["Total"].sum()
+st.write("Sales by Product Line")
+st.bar_chart(product_sales)
 
-            found.extend(data)
 
-        counts = Counter(found)
+st.subheader("Key Metrics")
 
-        df = pd.DataFrame(
-            counts.items(),
-            columns=["User Type", "Count"],
-        df =pd.read_cvs("SuperMarket dataset.cvs")
-        )
+total_sales = df["Total"].sum()
+avg_rating = df["Rating"].mean()
 
-        st.subheader("Analysis Result")
-
-        st.dataframe(df)
-
-        csv = df.to_csv(index=False)
-
-        st.download_button(
-            "Download CSV",
-            csv,
-            "report.csv",
-            "text/csv"
-        )
-
-        fig, ax = plt.subplots()
-
-        ax.bar(
-            df["User Type"],
-            df["Count"]
-        )
-
-        plt.xticks(rotation=15)
-
-        plt.xlabel("User Type")
-        plt.ylabel("Count")
-
-        plt.title("Target User Analysis")
-
-        st.pyplot(fig)
-
-        st.success("Analysis Completed")
+st.write("Total Sales:", total_sales)
+st.write("Average Rating:", round(avg_rating, 2))
