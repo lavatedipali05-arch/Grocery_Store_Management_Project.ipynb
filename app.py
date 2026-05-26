@@ -1,83 +1,31 @@
 import streamlit as st
 import pandas as pd
-import re
-from collections import Counter
-import matplotlib.pyplot as plt
+import random
 
 st.title("Grocery Store Management Analysis")
-
 st.write("Target User Frequency Analyzer")
 
-text = st.text_area(
-    "Enter Grocery Store Document",
-    height=250
-)
+# Auto dataset
+def generate_data():
+    items = ["Rice", "Milk", "Bread", "Eggs"]
+    data = []
+
+    for i in range(50):
+        item = random.choice(items)
+        qty = random.randint(1,5)
+        price = random.randint(20,100)
+        total = qty * price
+        data.append([item, qty, price, total])
+
+    return pd.DataFrame(data, columns=["Item","Qty","Price","Total"])
+
+df = generate_data()
+
+st.dataframe(df)
 
 if st.button("Analyze"):
+    st.write("### Summary")
+    st.write(df.describe())
 
-    if text == "":
-        st.warning("Please enter some text")
-
-    else:
-
-        cleaned_text = re.sub(r"\s+", " ", text)
-
-        users = [
-            "Store Owner",
-            "Store Manager",
-            "Cashier",
-            "Inventory Staff",
-            "Customers",
-            "Suppliers",
-            "Admin"
-        ]
-
-        found = []
-
-        for user in users:
-
-            data = re.findall(
-                user,
-                cleaned_text,
-                re.IGNORECASE
-            )
-
-            found.extend(data)
-
-        counts = Counter(found)
-
-        df = pd.DataFrame(
-            counts.items(),
-            columns=["User Type", "Count"]
-        )
-
-        st.subheader("Analysis Result")
-
-        st.dataframe(df)
-
-        csv = df.to_csv(index=False)
-
-        st.download_button(
-            "Download CSV",
-            csv,
-            "report.csv",
-            "text/csv"
-        )
-
-        fig, ax = plt.subplots()
-
-        ax.bar(
-            df["User Type"],
-            df["Count"]
-        )
-
-        plt.xticks(rotation=15)
-
-        plt.xlabel("User Type")
-        plt.ylabel("Count")
-
-        plt.title("Target User Analysis")
-
-        st.pyplot(fig)
-
-        st.success("Analysis Completed")
+    st.write("### Top Selling Items")
+    st.bar_chart(df["Item"].value_counts())
