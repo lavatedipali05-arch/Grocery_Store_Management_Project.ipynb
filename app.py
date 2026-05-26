@@ -48,7 +48,7 @@ if st.button("Analyze"):
 
         df = pd.DataFrame(
             counts.items(),
-            columns=["User Type", "Count"]
+            columns=["User Type", "Count"],
         df =pd.read_cvs("SuperMarket dataset.cvs")
         )
 
