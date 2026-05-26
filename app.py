@@ -3,6 +3,12 @@ import pandas as pd
 import re
 from collections import Counter
 import matplotlib.pyplot as plt
+import streamlit as st
+import pandas as pd
+
+df = pd.read_csv("supermarket_sales.csv")
+
+st.write(df.head())
 
 st.title("Grocery Store Management Analysis")
 
