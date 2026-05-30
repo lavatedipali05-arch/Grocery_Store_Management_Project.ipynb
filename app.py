@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import random
+from sklearn.linear_model import LinearRegression
+import numpy as np
+
 
 st.title("Grocery Store Management Analysis")
 st.write("Target User Frequency Analyzer")
@@ -26,5 +29,31 @@ if st.button("Analyze"):
     st.write("Summary")
     st.write(df.describe())
 
+    st.subheader(" AI Future Forecast")
+
+df["Day"] = np.arange(len(df))
+
+X = df[["Day"]]
+y = df["Total"]
+
+model = LinearRegression()
+model.fit(X, y)
+
+future_days = np.arange(len(df), len(df)+7).reshape(-1,1)
+future_sales = model.predict(future_days)
+
+forecast_df = pd.DataFrame({
+    "Day": range(1,8),
+    "Predicted Sales": future_sales
+})
+
+st.dataframe(forecast_df)
+
+st.line_chart(forecast_df.set_index("Day"))
+
     st.write("Top Selling Items")
     st.bar_chart(df["Item"].value_counts())
+
+
+
+
